@@ -1,9 +1,8 @@
 package com.example.tenant.service;
 
-import com.example.tenant.entity.AppUser;
-import com.example.tenant.repo.AppUserRepository;
+import com.example.tenant.entity.master.AppUser;
+import com.example.tenant.repo.master.AppUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,8 +16,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser user = appUserRepository.findByUsername(username)
+        return appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-        return new User(user.getUsername(), user.getPassword(), user.getAuthorities());
     }
 }

@@ -1,4 +1,4 @@
-package com.example.tenant.entity;
+package com.example.tenant.entity.tenant;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

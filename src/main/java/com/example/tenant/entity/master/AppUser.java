@@ -1,4 +1,4 @@
-package com.example.tenant.entity;
+package com.example.tenant.entity.master;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +29,15 @@ public class AppUser implements UserDetails {
     private AppUserRole appUserRole;
     private Boolean locked;
     private Boolean enabled;
+    private String tenantId;
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

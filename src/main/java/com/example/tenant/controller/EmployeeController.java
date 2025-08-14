@@ -1,18 +1,19 @@
 package com.example.tenant.controller;
 
-import com.example.tenant.entity.Employee;
+import com.example.tenant.entity.tenant.Employee;
 import com.example.tenant.model.EmployeeDto;
-import com.example.tenant.repo.EmployeeRepository;
+import com.example.tenant.repo.tenant.EmployeeRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/api/employee")
+@RequestMapping("/employees")
 public class EmployeeController {
 
     static AtomicInteger id = new AtomicInteger(1);
@@ -25,7 +26,9 @@ public class EmployeeController {
 
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {
-        return ok(employeeRepository.findAll().stream().map(e -> new EmployeeDto(e.getName())).toList());
+        return ok(employeeRepository.findAll().stream()
+                .map(e -> new EmployeeDto(e.getName()))
+                .collect(Collectors.toList()));
     }
 
     @PostMapping
