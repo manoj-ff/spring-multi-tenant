@@ -1,4 +1,4 @@
-package com.example.tenant.entity;
+package com.example.tenant.entity.master;
 
 public enum AppUserRole {
     USER,

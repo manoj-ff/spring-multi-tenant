@@ -1,6 +1,6 @@
-package com.example.tenant.repo;
+package com.example.tenant.repo.master;
 
-import com.example.tenant.entity.AppUser;
+import com.example.tenant.entity.master.AppUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
