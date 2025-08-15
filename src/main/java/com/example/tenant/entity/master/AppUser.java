@@ -11,15 +11,7 @@ import java.util.Collections;
 @Entity
 public class AppUser implements UserDetails {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "user_sequence"
-    )
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String username;

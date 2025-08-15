@@ -7,6 +7,7 @@ import jakarta.annotation.PostConstruct;
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@DependsOn("masterLiquibase")
 public class TenantManagementService {
 
     @Autowired
