@@ -1,8 +1,8 @@
 package com.example.tenant.service;
 
 import com.example.tenant.config.MultitenantDataSource;
-import com.example.tenant.entity.master.DataSourceConfig;
-import com.example.tenant.repo.master.DataSourceConfigRepository;
+import com.example.tenant.entity.master.TenantConfig;
+import com.example.tenant.repo.master.TenantConfigRepository;
 import jakarta.annotation.PostConstruct;
 import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.Map;
 public class TenantManagementService {
 
     @Autowired
-    private DataSourceConfigRepository dataSourceConfigRepository;
+    private TenantConfigRepository tenantConfigRepository;
 
     @Autowired
     private MultitenantDataSource multitenantDataSource;
@@ -28,8 +28,8 @@ public class TenantManagementService {
     @PostConstruct
     public void init() {
         Map<Object, Object> resolvedDataSources = new HashMap<>(multitenantDataSource.getResolvedDataSources());
-        List<DataSourceConfig> tenantConfigs = dataSourceConfigRepository.findAll();
-        for (DataSourceConfig config : tenantConfigs) {
+        List<TenantConfig> tenantConfigs = tenantConfigRepository.findAll();
+        for (TenantConfig config : tenantConfigs) {
             DataSource dataSource = createDataSource(config);
             resolvedDataSources.put(config.getTenantId(), dataSource);
         }
@@ -37,13 +37,12 @@ public class TenantManagementService {
         multitenantDataSource.afterPropertiesSet();
     }
 
-    public List<DataSourceConfig> getAllTenantConfigs() {
-        return dataSourceConfigRepository.findAll();
+    public List<TenantConfig> getAllTenantConfigs() {
+        return tenantConfigRepository.findAll();
     }
 
-    public DataSource createDataSource(DataSourceConfig config) {
+    public DataSource createDataSource(TenantConfig config) {
         return DataSourceBuilder.create()
-                .driverClassName(config.getDriverClassName())
                 .url(config.getUrl())
                 .username(config.getUsername())
                 .password(config.getPassword())

@@ -5,11 +5,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.test.context.ActiveProfiles;
 
-//@SpringBootTest
-//@ActiveProfiles("test")
+@SpringBootTest
+@ActiveProfiles("test")
 class SpringMultiTenantApplicationTests {
 
-//	@Test
+	@Test
 	void contextLoads() {
 	}
 

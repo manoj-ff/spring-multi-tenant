@@ -20,22 +20,14 @@ public class JWTUtil implements Serializable {
     @Serial
     private static final long serialVersionUID = -2550185165626007488L;
 
-
     @Value("${app.security.jwt.expiration}")
     private long expiration;
-
-    @Value("${app.security.jwt.refresh-token.expiration}")
-    private long refreshTokenExpiration;
 
     @Value("${app.jwt-secret}")
     private String secret;
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
-    }
-
-    public Date getIssuedAtDateFromToken(String token) {
-        return getClaimFromToken(token, Claims::getIssuedAt);
     }
 
     public Date getExpirationDateFromToken(String token) {
@@ -59,34 +51,19 @@ public class JWTUtil implements Serializable {
         return expiration.before(new Date());
     }
 
-    private Boolean ignoreTokenExpiration(String token) {
-        // here you specify tokens, for that the expiration is ignored
-        return false;
-    }
-
-    public String generateAccessToken(AppUser userDetails, int level) {
+    public String generateAccessToken(AppUser userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("level",level);
         return buildToken(claims, userDetails.getUsername(), expiration);
-    }
-
-    public String generateRefreshToken(AppUser userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-        return buildToken(claims, userDetails.getUsername(), refreshTokenExpiration);
     }
 
     private String buildToken(Map<String, Object> claims, String subject, long expiration) {
         return Jwts.builder()
-            .setClaims(claims)
-            .setSubject(subject)
-            .setIssuedAt(new Date(System.currentTimeMillis()))
-            .setExpiration(new Date(System.currentTimeMillis()  + expiration))
-            .signWith(SignatureAlgorithm.HS512, secret)
-            .compact();
-    }
-
-    public Boolean canTokenBeRefreshed(String token) {
-        return (!isTokenExpired(token) || ignoreTokenExpiration(token));
+                .setClaims(claims)
+                .setSubject(subject)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
     }
 
     public Boolean validateToken(String token, AppUser userDetails) {
@@ -94,13 +71,4 @@ public class JWTUtil implements Serializable {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public int getLevelFromToken(String token) {
-        Claims claims = Jwts.parser()
-            .setSigningKey(secret)
-            .parseClaimsJws(token)
-            .getBody();
-
-        Integer level = claims.get("level", Integer.class);
-        return level != null ? level : 1;
-    }
 }

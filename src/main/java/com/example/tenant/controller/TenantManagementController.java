@@ -1,8 +1,8 @@
 package com.example.tenant.controller;
 
 import com.example.tenant.config.MultitenantDataSource;
-import com.example.tenant.entity.master.DataSourceConfig;
-import com.example.tenant.repo.master.DataSourceConfigRepository;
+import com.example.tenant.entity.master.TenantConfig;
+import com.example.tenant.repo.master.TenantConfigRepository;
 import com.example.tenant.service.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,29 +24,22 @@ public class TenantManagementController {
     private TenantManagementService tenantManagementService;
 
     @Autowired
-    private DataSourceConfigRepository dataSourceConfigRepository;
+    private TenantConfigRepository tenantConfigRepository;
 
     @Autowired
     private MultitenantDataSource multitenantDataSource;
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ResponseEntity<String> createTenant(@RequestBody DataSourceConfig dataSourceConfig) {
-        // 1. Save tenant config to master DB
-        dataSourceConfigRepository.save(dataSourceConfig);
-
-        // 2. Create new datasource
-        DataSource newDataSource = tenantManagementService.createDataSource(dataSourceConfig);
-
-        // 3. Add new datasource to the multitenant data source
+    public ResponseEntity<String> createTenant(@RequestBody TenantConfig tenantConfig) {
+        tenantConfigRepository.save(tenantConfig);
+        DataSource newDataSource = tenantManagementService.createDataSource(tenantConfig);
         Map<Object, Object> resolvedDataSources = new HashMap<>(multitenantDataSource.getResolvedDataSources());
-        resolvedDataSources.put(dataSourceConfig.getTenantId(), newDataSource);
+        resolvedDataSources.put(tenantConfig.getTenantId(), newDataSource);
         multitenantDataSource.setTargetDataSources(resolvedDataSources);
-        multitenantDataSource.afterPropertiesSet(); // Re-initialize the data source
+        multitenantDataSource.afterPropertiesSet();
+        tenantManagementService.runLiquibase(newDataSource, "classpath:db/changelog/db.changelog-tenant.xml");
 
-        // 4. Run liquibase migration on the new tenant's DB
-        tenantManagementService.runLiquibase(newDataSource, "classpath:db/changelog/db.changelog-tenant.yaml");
-
-        return ResponseEntity.ok("Tenant " + dataSourceConfig.getTenantId() + " created successfully.");
+        return ResponseEntity.ok("Tenant " + tenantConfig.getTenantId() + " created successfully.");
     }
 }

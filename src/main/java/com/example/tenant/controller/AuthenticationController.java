@@ -5,9 +5,11 @@ import com.example.tenant.entity.master.AppUser;
 import com.example.tenant.entity.master.AppUserRole;
 import com.example.tenant.model.AppUserDto;
 import com.example.tenant.repo.master.AppUserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import static org.springframework.http.ResponseEntity.ok;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/security")
 public class AuthenticationController {
@@ -47,11 +50,10 @@ public class AuthenticationController {
         ));
 
         if (authenticate.getPrincipal() instanceof AppUser user) {
-            return ok(new LoginResponse(jwtUtil.generateAccessToken(user, 1)));
+            return ok(new LoginResponse(jwtUtil.generateAccessToken(user)));
         }
 
-        throw new RuntimeException("User not authorized");
-
+        throw new BadCredentialsException("User not authorized");
     }
 
     @PostMapping("/users")
@@ -60,7 +62,6 @@ public class AuthenticationController {
         AppUser user = new AppUser();
         user.setTenantId(userDto.getTenantId());
         user.setEmail(userDto.getEmail());
-        user.setUsername(userDto.getUsername());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEnabled(true);
         user.setLocked(false);

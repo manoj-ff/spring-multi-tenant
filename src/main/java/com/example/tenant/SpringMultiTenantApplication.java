@@ -28,11 +28,10 @@ public class SpringMultiTenantApplication {
     @Bean
     ApplicationRunner runner(AppUserRepository userRepository, PasswordEncoder passwordEncoder) {
         return args -> {
-            if (!userRepository.existsAppUserByUsername("manoj")) {
+            if (!userRepository.existsAppUserByEmail("admin@test.com")) {
                 AppUser user = new AppUser();
-                user.setName("Manoj");
-                user.setUsername("manoj");
-                user.setEmail("manoj@test.com");
+                user.setName("Admin");
+                user.setEmail("admin@test.com");
                 user.setPassword(passwordEncoder.encode("pass"));
                 user.setAppUserRole(AppUserRole.ADMIN);
                 user.setLocked(false);

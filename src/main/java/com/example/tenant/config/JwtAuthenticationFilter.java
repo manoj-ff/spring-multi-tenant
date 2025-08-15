@@ -35,21 +35,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         final String requestTokenHeader = request.getHeader("Authorization");
-        String username = null;
+        String email = null;
         String jwtToken = null;
 
 
         if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
             jwtToken = requestTokenHeader.substring(7);
             try {
-                username = jwtUtil.getUsernameFromToken(jwtToken);
+                email = jwtUtil.getUsernameFromToken(jwtToken);
             } catch (IllegalArgumentException e) {
                 log.error("", e);
             }
         }
 
-        if (username != null) {
-            AppUser userDetails = appUserRepository.findByUsername(username).orElseThrow();
+        if (email != null) {
+            AppUser userDetails = appUserRepository.findByEmail(email).orElseThrow();
             if (jwtUtil.validateToken(jwtToken, userDetails)) {
                 var token = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
