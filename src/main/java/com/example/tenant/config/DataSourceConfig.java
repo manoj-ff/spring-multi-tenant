@@ -25,8 +25,8 @@ public class DataSourceConfig {
         return new DataSourceProperties();
     }
 
-    @Bean(name = "masterDataSource")
     @Primary
+    @Bean(name = "masterDataSource")
     public DataSource masterDataSource(@Qualifier("masterDataSourceProperties") DataSourceProperties properties) {
         return properties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
@@ -48,6 +48,6 @@ public class DataSourceConfig {
 
     @Bean
     public EntityManagerFactoryBuilder entityManagerFactoryBuilder(JpaVendorAdapter jpaVendorAdapter) {
-        return new EntityManagerFactoryBuilder(jpaVendorAdapter, new HashMap<>(), null);
+        return new EntityManagerFactoryBuilder(jpaVendorAdapter, (dataSource) -> new HashMap<>(), null);
     }
 }

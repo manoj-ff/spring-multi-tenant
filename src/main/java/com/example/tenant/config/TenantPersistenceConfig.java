@@ -23,6 +23,7 @@ import java.util.Objects;
         transactionManagerRef = "tenantTransactionManager"
 )
 public class TenantPersistenceConfig {
+
     @Bean(name = "tenantEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean tenantEntityManagerFactory(
             EntityManagerFactoryBuilder builder,

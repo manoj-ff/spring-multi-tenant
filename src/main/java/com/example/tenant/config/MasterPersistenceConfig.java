@@ -30,9 +30,7 @@ public class MasterPersistenceConfig {
     @Bean(name = "masterEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean masterEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
-            @Qualifier("masterDataSource") DataSource dataSource,
-            // Injects the masterLiquibase bean to ensure it runs before the EntityManagerFactory is created
-            @Qualifier("masterLiquibase") SpringLiquibase masterLiquibase) {
+            @Qualifier("masterDataSource") DataSource dataSource) {
         Map<String, Object> properties = new HashMap<>();
         properties.put("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
         return builder
