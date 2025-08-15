@@ -1,0 +1,124 @@
+
+### Authorization by Admin.
+# @no-log
+POST {{myhost}}/api/security/login
+Content-Type: application/json
+
+{
+  "username": "admin@test.com",
+  "password": "pass"
+}
+
+> {% client.global.set("adminToken", response.body.accessToken); %}
+
+### Create Tenant 1
+# @no-log
+POST {{myhost}}/api/tenants
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "tenantId": "company1",
+  "url": "jdbc:postgresql://localhost:5432/company1",
+  "username": "postgres",
+  "password": "Qwerty@1"
+}
+
+### Create App User 1
+# @no-log
+POST {{myhost}}/api/security/users
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Tenant1",
+  "password": "pass",
+  "email": "tenant1@test.com",
+  "tenantId": "company1"
+}
+
+
+### Create Tenant 2
+# @no-log
+POST {{myhost}}/api/tenants
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "tenantId": "company2",
+  "url": "jdbc:postgresql://localhost:5432/company2",
+  "username": "postgres",
+  "password": "Qwerty@1"
+}
+
+### Create App User 1
+# @no-log
+POST {{myhost}}/api/security/users
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "name": "Tenant2",
+  "password": "pass",
+  "email": "tenant2@test.com",
+  "tenantId": "company2"
+}
+
+
+### Authorization by Tenant1.
+# @no-log
+POST {{myhost}}/api/security/login
+Content-Type: application/json
+
+{
+  "username": "tenant1@test.com",
+  "password": "pass"
+}
+
+> {% client.global.set("tenant1Token", response.body.accessToken); %}
+
+### Create employee in Tenant1
+# @no-log
+POST {{myhost}}/api/employees
+Authorization: Bearer {{tenant1Token}}
+Content-Type: application/json
+
+{
+  "name": "Tenant1 User1"
+}
+
+
+### Authorization by Tenant2.
+# @no-log
+POST {{myhost}}/api/security/login
+Content-Type: application/json
+
+{
+  "username": "tenant2@test.com",
+  "password": "pass"
+}
+
+> {% client.global.set("tenant2Token", response.body.accessToken); %}
+
+### Create employee in Tenant2
+# @no-log
+POST {{myhost}}/api/employees
+Authorization: Bearer {{tenant2Token}}
+Content-Type: application/json
+
+{
+  "name": "Tenant2 User2-2"
+}
+
+
+### Get employee in Tenant1
+# @no-log
+GET {{myhost}}/api/employees
+Authorization: Bearer {{tenant1Token}}
+
+
+
+### Get employee in Tenant2
+# @no-log
+GET {{myhost}}/api/employees
+Authorization: Bearer {{tenant2Token}}
