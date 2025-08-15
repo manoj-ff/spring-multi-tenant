@@ -13,10 +13,8 @@ import java.util.stream.Collectors;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
-
-    static AtomicInteger id = new AtomicInteger(1);
 
     private final EmployeeRepository employeeRepository;
 
@@ -34,7 +32,6 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDto> create(@RequestBody EmployeeDto employeeDto) {
         Employee employee = new Employee();
-        employee.setId(id.getAndIncrement());
         employee.setName(employeeDto.getName());
         employeeRepository.save(employee);
         return ok(employeeDto);

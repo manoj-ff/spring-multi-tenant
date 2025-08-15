@@ -11,6 +11,8 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Configuration
@@ -21,14 +23,16 @@ import java.util.Objects;
         transactionManagerRef = "tenantTransactionManager"
 )
 public class TenantPersistenceConfig {
-
     @Bean(name = "tenantEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean tenantEntityManagerFactory(
             EntityManagerFactoryBuilder builder,
             @Qualifier("multitenantDataSource") DataSource dataSource) {
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("hibernate.physical_naming_strategy", "org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy");
         return builder
                 .dataSource(dataSource)
                 .packages("com.example.tenant.entity.tenant")
+                .properties(properties)
                 .persistenceUnit("tenant")
                 .build();
     }
