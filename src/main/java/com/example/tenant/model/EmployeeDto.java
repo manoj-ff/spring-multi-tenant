@@ -4,10 +4,20 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class EmployeeDto implements Serializable {
+    private Long id;
     private final String name;
 
-    public EmployeeDto(String name) {
+    public EmployeeDto(Long id, String name) {
         this.name = name;
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

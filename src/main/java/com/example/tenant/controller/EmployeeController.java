@@ -25,7 +25,7 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<List<EmployeeDto>> getAll() {
         return ok(employeeRepository.findAll().stream()
-                .map(e -> new EmployeeDto(e.getName()))
+                .map(e -> new EmployeeDto(e.getId(), e.getName()))
                 .collect(Collectors.toList()));
     }
 
@@ -34,6 +34,8 @@ public class EmployeeController {
         Employee employee = new Employee();
         employee.setName(employeeDto.getName());
         employeeRepository.save(employee);
+
+        employeeDto.setId(employee.getId());
         return ok(employeeDto);
     }
 }

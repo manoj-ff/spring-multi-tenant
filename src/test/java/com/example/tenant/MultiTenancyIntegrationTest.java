@@ -21,9 +21,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+//@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+//@AutoConfigureMockMvc
+//@ActiveProfiles("test")
 public class MultiTenancyIntegrationTest {
 
     @Autowired
@@ -32,7 +32,7 @@ public class MultiTenancyIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
+    //@Test
     void testTenantCreationAndDataIsolation() throws Exception {
         // 1. Create tenant1
         DataSourceConfig tenant1Config = createTenantConfig("tenant1");

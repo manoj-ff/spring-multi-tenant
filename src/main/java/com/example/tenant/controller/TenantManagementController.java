@@ -6,6 +6,7 @@ import com.example.tenant.repo.master.DataSourceConfigRepository;
 import com.example.tenant.service.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +30,7 @@ public class TenantManagementController {
     private MultitenantDataSource multitenantDataSource;
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public ResponseEntity<String> createTenant(@RequestBody DataSourceConfig dataSourceConfig) {
         // 1. Save tenant config to master DB
         dataSourceConfigRepository.save(dataSourceConfig);

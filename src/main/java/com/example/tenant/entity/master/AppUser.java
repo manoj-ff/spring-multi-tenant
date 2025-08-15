@@ -23,6 +23,10 @@ public class AppUser implements UserDetails {
     private Boolean enabled;
     private String tenantId;
 
+    public Long getId() {
+        return id;
+    }
+
     public String getTenantId() {
         return tenantId;
     }
@@ -92,6 +96,26 @@ public class AppUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
+        return enabled;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public AppUserRole getAppUserRole() {
+        return appUserRole;
+    }
+
+    public Boolean getLocked() {
+        return locked;
+    }
+
+    public Boolean getEnabled() {
         return enabled;
     }
 }

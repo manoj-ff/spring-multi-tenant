@@ -22,8 +22,7 @@ public class TenantFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
-            if (principal instanceof AppUser) {
-                AppUser appUser = (AppUser) principal;
+            if (principal instanceof AppUser appUser) {
                 String tenantId = appUser.getTenantId();
                 if (tenantId != null) {
                     TenantContext.setCurrentTenant(tenantId);
