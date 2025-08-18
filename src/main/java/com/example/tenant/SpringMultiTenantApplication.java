@@ -12,8 +12,11 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfigurati
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
+@EnableScheduling
 @EnableAsync
 @SpringBootApplication(exclude = {
         DataSourceAutoConfiguration.class,
